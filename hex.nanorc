@@ -22,9 +22,9 @@
 #
 ##############################################################################
 #
-#  HUGE thanks to Ubuntu forums member "BasiliusCarver"
-#  (Shaun Lawrie) for all his help!
-#  See: http://ubuntuforums.org/showthread.php?t=2322948
+#  A HUGE thanks to Ubuntu forums member "BasiliusCarver" (Shaun Lawrie)
+#  for all his help in figuring this REGEX stuff out.
+#  Please see: http://ubuntuforums.org/showthread.php?t=2322948
 #
 ##############################################################################
 #
@@ -44,6 +44,16 @@ syntax "hex" "\.hex$"
 ##
 
 ##
+## NOTE: GitHub sometimes mangles the control characters. IF the
+## carriage return (^M) characters are misssing, use the following
+## to recreate them:
+## To generate the carriage return character that looks like "^M"
+## (but is only ONE character), in the nano editor, try this:
+## SHIFT-ALT-V (nano's "verbatim" mode), then press CTRL-m.
+## This should allow you to generate the carriage return character.
+##
+
+##
 ## The order of the following rules is important because they are cascading.
 ## Where the regex is yuck I have put the target colored group in parentheses ().
 ##
@@ -55,12 +65,13 @@ color yellow "^.+$"
 ## Note RAK: changed end of line to ("CR[0|1]$") to preserve
 ## proper coloring in case the file is a Windows CR/LF style.
 ## Don't edit what appears to be "^M" since it's only one character!
-icolor brightmagenta "[A-F0-9]{2}(?$)"
+icolor brightmagenta "[A-F0-9]{2}(^M?$)"
 
 ## Record type. The fourth byte. Legal types are 00 thru 05 only.
-## First color them all the "error" color.
+## First color them all the "error" color...
 icolor black,white "^:[A-F0-9]{6}([A-F0-9]{2})"
-## Now color good record types the "legal" color.
+
+## ...Now color good record types the "legal" color.
 icolor brightblue "^:[A-F0-9]{6}([0][0-5])"
 
 ## Address. The second and third byte.
@@ -73,12 +84,12 @@ icolor cyan "^:([A-F0-9]{2})"
 color brightwhite "^:"
 
 ## Apply the EOF syntax last.
-## Note RAK: commented out because the FF is merely a
-## checksum so it should be colored as a checksum.
+## Note RAK: commented out because the FF is merely a checksum so it
+## should be colored as a checksum. Uncomment if you like.
 ## color white,black "FF$"
 
 ## If there is an ending CR, don't color it as part of the checksum
 ## Don't edit this as what appears to be "^M" is only one character!
-color brightblack "$"
+color brightblack "^M$"
 
 # end hex.nanorc
